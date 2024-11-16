@@ -48,13 +48,26 @@ else:
 # Bước 5: Tải dữ liệu mới từ Binance từ đầu ngày hôm nay đến hiện tại
 exchange = ccxt.binance()
 symbol = 'BTC/USDT'
-timeframe = '1h'
-limit = 500
+timeframe = '1m'
+limit = 1000
 start_of_day = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-since = int(start_of_day.timestamp() * 1000)
-ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since=since, limit=limit)
-new_df = pd.DataFrame(ohlcv, columns=['Timestamp', 'Open', 'High', 'Low', 'Close', 'Volume'])
-new_data = new_df[['Open', 'High', 'Low', 'Close', 'Volume']].values
+since = int(start_of_day.timestamp() * 1000)  # Convert to milliseconds
+try:
+    ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since=since, limit=limit)
+    new_df = pd.DataFrame(ohlcv, columns=['Timestamp', 'Open', 'High', 'Low', 'Close', 'Volume'])
+    new_df['Timestamp'] = pd.to_datetime(new_df['Timestamp'], unit='ms')
+    new_data = new_df[['Open', 'High', 'Low', 'Close', 'Volume']].values
+    file_path = 'bitcoin_data.csv' 
+    if os.path.exists(file_path):
+        new_df.to_csv(file_path, mode='a', header=False, index=False)
+    else:
+        new_df.to_csv(file_path, mode='w', header=True, index=False)
+except ccxt.NetworkError as e:
+    print("Lỗi mạng khi kết nối đến Binance API:", e)
+except ccxt.ExchangeError as e:
+    print("Lỗi khi truy vấn dữ liệu từ Binance:", e)
+except Exception as e:
+    print("Có lỗi không xác định:", e)
 # Chuẩn hóa và chuẩn bị dữ liệu mới để huấn luyện thêm
 new_scaled_data = scaler.transform(new_data)
 new_X, new_y = [], []
