@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from telegram import Bot
 import asyncio
 TELEGRAM_TOKEN = '7718760664:AAEfBsOfzR96YcfyQO9hvNOPMHEZIogu4CY'
-CHAT_ID = '859389644'
+CHAT_ID = '-4578601279'
 # Bước 1: Tải dữ liệu quá khứ
 df = pd.read_csv('bitcoin_data.csv')
 df['Timestamp'] = pd.to_datetime(df['Timestamp'], dayfirst=False, errors='coerce')

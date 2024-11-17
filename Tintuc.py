@@ -14,7 +14,7 @@ from deep_translator import GoogleTranslator
 nltk.download('punkt')
 nltk.download('stopwords')
 TELEGRAM_TOKEN = '7718760664:AAEfBsOfzR96YcfyQO9hvNOPMHEZIogu4CY'
-CHAT_ID = '859389644'
+CHAT_ID = '-4578601279'
 # Hàm lấy tin tức từ News API
 def fetch_bitcoin_news(api_key, from_date='2024-11-12', to_date='2024-11-13'):
     url = f"https://newsapi.org/v2/everything?q=Bitcoin&from={from_date}&to={to_date}&sortBy=publishedAt&apiKey={api_key}"
